@@ -1,5 +1,8 @@
 #pragma once
-class ManagedIStream
+namespace InfinityOfficialNetwork::Server::Bridge::Shared::Streams
 {
-};
+	class ManagedIStream : public std::wistream
+	{
+	};
 
+}

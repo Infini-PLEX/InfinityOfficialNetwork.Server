@@ -1,5 +1,8 @@
 #pragma once
 
+#include "Streams/ManagedIStream.h"
+#include "Streams/ManagedOStream.h"
+
 #include "../../Core/JavaInitializer/JavaVM.h"
 
 #include <msclr/marshal.h>
@@ -11,13 +14,21 @@ namespace InfinityOfficialNetwork::Server::Bridge::Shared {
 		InfinityOfficialNetwork::Server::Core::JavaInitializer::JavaVM* Instance;
 
 	public:
-		ref class Version {
-			InfinityOfficialNetwork::Server::Core::JavaInitializer::JavaVM::Version* Instance;
+		enum class Version {
+			JDK_21,
+			JDK_17,
+			JDK_11,
+			JDK_8
 		} JavaVersion;
 
 		ref class Arguments {
 		private:
 			InfinityOfficialNetwork::Server::Core::JavaInitializer::JavaVM::Arguments* Instance;
+
+		public:
+			Arguments(const Arguments% args) {
+				Instance = args.Instance;
+			}
 
 		public:
 			property std::size_t MinRam {
@@ -76,7 +87,30 @@ namespace InfinityOfficialNetwork::Server::Bridge::Shared {
 		} JavaArguments;
 
 		ref class Streams {
+		public:
+			Streams(const Streams% strs) {
+				Instance = strs.Instance;
+			}
+			InfinityOfficialNetwork::Server::Core::JavaInitializer::JavaVM::Streams* Instance;
 
-		};
+			InfinityOfficialNetwork::Server::Bridge::Shared::Streams::ManagedIStream* ManagedIn;
+			InfinityOfficialNetwork::Server::Bridge::Shared::Streams::ManagedOStream* ManagedOut;
+			InfinityOfficialNetwork::Server::Bridge::Shared::Streams::ManagedOStream* ManagedErr;
+
+
+			//add managed streams
+
+		} JavaStreams;
+
+		JavaVM
+		(
+			Version v, 
+			Arguments args, 
+			Streams strs
+		) : 
+			JavaVersion(v),
+			JavaArguments(args),
+			JavaStreams(strs)
+		{}
 	};
 }
